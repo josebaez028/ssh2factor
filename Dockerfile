@@ -21,6 +21,7 @@ RUN echo 'user1:admin' | chpasswd
 USER user1
 RUN google-authenticator -t -d -f -r 3 -R 30 -W
 RUN chmod 400 .google_authenticator
+
 USER root
 RUN echo '# Enable MFA using Google Authenticator PAM SSH Access\n\
 auth required pam_google_authenticator.so nullok\n '\
@@ -30,13 +31,8 @@ RUN echo '# Enable MFA using Google Authenticator PAM Local Console\n\
 auth required pam_google_authenticator.so nullok\n '\
 >> /etc/pam.d/login
 
-
 RUN sed -i -e 's/ChallengeResponseAuthentication no/ChallengeResponseAuthentication yes/' /etc/ssh/sshd_config
 RUN service ssh restart
-
-
-
-
 
 RUN apt-get clean
 VOLUME [ "/root" ]
